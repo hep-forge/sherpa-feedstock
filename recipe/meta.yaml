@@ -1,5 +1,5 @@
 {% set versions = {
-    "0.0.0": "REPLACE_WITH_SHA256"
+    "2.2.16": "b2680da5682c78623635ae88a5ff5af346cf74c1be95ee9177e8f9080d418e76"
 } %}
 
 {% set version = environ.get('COMMIT_VERSION', None) %}
@@ -13,36 +13,61 @@ package:
   version: {{ environ.get('ANACONDA_VERSION', version)|replace("-", ".") }}
 
 source:
-  url: "https://gitlab.com/sherpa-team/sherpa/archive/refs/tags/{{ version }}.tar.gz"   # TODO: confirm upstream's actual tag/tarball naming
+  url: "https://gitlab.com/sherpa-team/sherpa/-/archive/v{{ version }}/sherpa-v{{ version }}.tar.gz"
   {% if versions.get(version, None) %}
   sha256: {{ versions.get(version) }}
   {% endif %}
+  patches:
+    - 0001-convert-print-statements-using-2to3.patch
+    - 0002-remove-null-characters-for-prefix-replacement.patch
 
 build:
+  skip: true  # [not linux]
   number: 0
-  run_exports:
-    - {{ pin_subpackage(name, max_pin="x.x.x") }}
 
 requirements:
   build:
-    - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
-    - cmake
+    - {{ compiler('gfortran') }}
+    - gnuconfig
+    - autoconf
+    - libtool
     - make
+    - automake
+    - which
+    - sed
+    - diffutils
+    - texinfo
   host:
-    # TODO: library dependencies
+    - sqlite
+    # NOTE: hep-forge's single `hepmc` package spans both the HepMC2 and
+    # HepMC3 lines (see eic-hepmc3-cmake-quirks memory) -- confirm which
+    # build-string tag gives the HepMC2 ABI Sherpa 2.2.x expects.
+    - lhapdf
+    - hepmc
   run:
-    # TODO: runtime dependencies
+    - lhapdf
+    - hepmc
 
 test:
+  requires:
+    - lhapdf
+    - hepmc
   commands:
-    - echo "TODO: a real smoke test"
+    - test -f $PREFIX/bin/Sherpa
+    - test -f $PREFIX/bin/Sherpa-config
+    - Sherpa-config --version
+    - Sherpa --help
 
 about:
   home: "https://gitlab.com/sherpa-team/sherpa"
   license: "GPL-3.0-or-later"
+  license_file: COPYING
   summary: "Sherpa: multi-purpose Monte Carlo event generator for particle physics"
+  description: |
+    Sherpa simulates high-energy reactions of particles in lepton-lepton,
+    lepton-photon, photon-photon, lepton-hadron, and hadron-hadron collisions.
 
 extra:
   recipe-maintainers:
