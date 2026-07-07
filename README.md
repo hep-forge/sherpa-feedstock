@@ -11,6 +11,11 @@ Builds linux-amd64 + linux-arm64 in one matrix workflow and uploads to the
 
 Sherpa: multi-purpose Monte Carlo event generator for particle physics
 
+## Architectures
+
+State per architecture: see the platforms badge above or [anaconda.org/hep-forge/sherpa](https://anaconda.org/hep-forge/sherpa).
+
+
 ## Install
 
 ```bash
@@ -20,3 +25,4 @@ conda install -c hep-forge -c conda-forge sherpa
 ## Maintainers
 
 * [@meiyasan](https://github.com/meiyasan/)
+
