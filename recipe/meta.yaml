@@ -41,19 +41,20 @@ requirements:
     - texinfo
   host:
     - sqlite
-    # NOTE: hep-forge's single `hepmc` package spans both the HepMC2 and
-    # HepMC3 lines (see eic-hepmc3-cmake-quirks memory) -- confirm which
-    # build-string tag gives the HepMC2 ABI Sherpa 2.2.x expects.
+    # hep-forge's single `hepmc` package spans both HepMC2 and HepMC3 --
+    # Sherpa 2.2.x needs the classic HepMC/ headers (2.06.11), not
+    # HepMC3's HepMC3/ layout, so pin the line explicitly or the solver
+    # picks the newer default (3.3.1).
     - lhapdf
-    - hepmc
+    - hepmc 2.06.*
   run:
     - lhapdf
-    - hepmc
+    - hepmc 2.06.*
 
 test:
   requires:
     - lhapdf
-    - hepmc
+    - hepmc 2.06.*
   commands:
     - test -f $PREFIX/bin/Sherpa
     - test -f $PREFIX/bin/Sherpa-config
