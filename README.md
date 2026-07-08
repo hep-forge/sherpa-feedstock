@@ -13,7 +13,12 @@ Sherpa: multi-purpose Monte Carlo event generator for particle physics
 
 ## Architectures
 
-State per architecture: see the platforms badge above or [anaconda.org/hep-forge/sherpa](https://anaconda.org/hep-forge/sherpa).
+| Architecture | Latest published |
+|--------------|------------------|
+| linux-amd64 (`linux-64`) | ✅ `2.2.16` |
+| linux-arm64 (`linux-aarch64`) | ✅ `2.2.16` |
+
+_As of the last feedstock render; the badges above are live._
 
 
 ## Install
