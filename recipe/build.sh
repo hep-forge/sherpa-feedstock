@@ -11,6 +11,14 @@ export LDFLAGS="$(echo "${LDFLAGS}" | sed 's/ -Wl,--as-needed//g')"
 # -- it's the manual, not functionality, so skip building it entirely.
 sed -i '/^\t\tManual \\$/d' Makefile.am
 
+# Sherpa's own m4/acinclude.m4 builds CONDITIONAL_LHAPDFLIBS from
+# `lhapdf-config --ldflags`, but modern LHAPDF's lhapdf-config documents
+# --ldflags as '-L only' (the -lLHAPDF flag is only added by --libs).
+# That drops libLHAPDF.so from libSherpaTools.la's link line entirely,
+# so LHAPDF symbols end up unresolved shared-lib-undefined and Sherpa
+# fails at runtime with "undefined symbol: ...LHAPDF6Config3getEv".
+sed -i 's/lhapdf-config --ldflags/lhapdf-config --libs/' m4/acinclude.m4
+
 autoreconf --install
 
 # Sherpa v2 is Python 2 only, so disable Python
