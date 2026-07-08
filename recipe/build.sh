@@ -20,9 +20,11 @@ autoreconf --install
     CXX="${CXX}" \
     CXXFLAGS="${CXXFLAGS}" \
     LDFLAGS="${LDFLAGS}" \
-    MAKEINFO="makeinfo --no-validate" \
     PYTHON=""
 
 NPROC=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
-make --jobs="${NPROC}"
+# MAKEINFO="prog flags" isn't reliably honored (automake's rule is
+# $(MAKEINFO) $(MAKEINFOFLAGS), and MAKEINFO is expected to be just the
+# program name) -- pass the flag via MAKEINFOFLAGS at make time instead.
+make --jobs="${NPROC}" MAKEINFOFLAGS=--no-validate
 make install
