@@ -29,7 +29,7 @@ requirements:
   build:
     - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
-    - {{ compiler('gfortran') }}
+    - {{ compiler('fortran') }}
     - gnuconfig
     - autoconf
     - libtool
